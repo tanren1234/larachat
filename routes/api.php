@@ -12,23 +12,22 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('checkToken','Api\AuthorizationsController@checkToken');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
 Route::group([
     'namespace'=>'Api',
 ],function (){
     //登录
-    Route::post('/login','AuthorizationsController@login');
+    Route::post('login','AuthorizationsController@login');
     //注册
-    Route::post('/register','AuthorizationsController@register');
+    Route::post('register','AuthorizationsController@register');
 });
 Route::group([
     'namespace'=>'Api',
     'middleware'=>'auth:api'
 ],function (){
-    Route::get('/user', function (Request $request) {
+    Route::get('user', function (Request $request) {
         return $request->user();
     });
+    Route::post('message/{user}', 'MessageController@store')->name('api.message.store');;
 });

@@ -16,10 +16,14 @@ Welcome<br/><input id="text" type="text"/>
 </body>
 <script>
     var websocket = null;
-    var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjM1MzYzNzcxYTY5NTcyN2MxYjA1YjM1ZjVlMjczNGFkNjQ3NzFhZWJhY2Y3ZmJkNTJjMTc0NTc1ZDRlY2MzNmEwOTc2NjdkNWRhYzRkM2Q3In0.eyJhdWQiOiIyIiwianRpIjoiMzUzNjM3NzFhNjk1NzI3YzFiMDViMzVmNWUyNzM0YWQ2NDc3MWFlYmFjZjdmYmQ1MmMxNzQ1NzVkNGVjYzM2YTA5NzY2N2Q1ZGFjNGQzZDciLCJpYXQiOjE1NDc5NzM1NjcsIm5iZiI6MTU0Nzk3MzU2NywiZXhwIjoxNTQ4NTc4MzY3LCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.3Eo5EMouBZ65JCwVvipbBm6H3ksWSh7_R30l5oLjMk6ktQ6QbOTFiDJ2AtaMhE44FU2Y9jL7xt4pTvkMG3jwpYUaSH0n8AXfYv0OOwhr-4Bl84gQKhu8X3JirjqrZKaCBy0p_bS-a5qZcNwPfc9MRlBxp1HV5m9ISo4dIRvSLk_EapCcTLv_U3E97iLkiitEFCBNvHLsv2sUYjeJpzb2-F5VahEzo4EKnFCqGok3wkkKIrUGNeSQU17vlcS9D_CXnf8YQITXj4F9WWHDR9ZxujDdebM2TiZFLH6KAkmNBQ0o11WFmG7hICGOJ0GNmOUw8Blps-14LsQa61Zd9w9TwA899QLP36qFV5kOubXoCoi2l-hDeLmpJPmc5IRq-oPO_Nx8470WPBrex7AXAnEKf6DKyLXtHDlQv0yM1OCyb5G-hv2zwRfayHurwvx6jvif4MWOIvCvhJw_xDok8s3SGdJu5y5TXAKVTTN5AZJ7aVYrjXEzcTBt67uanL-9k-w_QZqUIjlueWcck5PvBkjy01EKuqV_Dh7vPEzIHSg7RXuxEkliJ8RVRvWk7rAjZhrOW-HrKQNKQxE4J-NZu7isDrEBuzJkgGwP-fmxSkzb2w4zskCTT9lQvBEwFcytKvL8kEhmnvySuKizMewQu1ArHjZLn_hscUDlXsl9AVIFEfU';
+    var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImU0MDVkNDRkYjgxNWRhZjA4MTYzMzJhMzFlNTA0OTJmMDU4NjBhYTYxYjJhZGRlNDY4YTA3Y2I0Nzc0NjM2YjQwNzRlODIyZmI5MTA1MTRkIn0.eyJhdWQiOiIyIiwianRpIjoiZTQwNWQ0NGRiODE1ZGFmMDgxNjMzMmEzMWU1MDQ5MmYw' +
+        'NTg2MGFhNjFiMmFkZGU0NjhhMDdjYjQ3NzQ2MzZiNDA3NGU4MjJmYjkxMDUxNGQiLCJpYXQiOjE1NjgwMjIxMjAsIm5iZiI6MTU2ODAyMjEyMCwiZXhwIjoxNTY4MDIyMjQwLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.eHpyoJkdHSNmkojwMcS86YVgqE1ciwaETp3G8R-6mHJk7orOLvtZa-jzbGuEjKZVwl2hUJy3WwgrMpQsnvyhoP0YprUkZj0sGSzdkiZGZVwyumUBNhqa57H4cDxP0BkhftoXm4p0SEA_9nBt2PyKDle3fdnEY9xFJORoPUG4-F81LftPmZbh1gtWJ_177Q' +
+        '-Sdnj0u_mM9dtsw9btY4CbZWhD5JmIfEhH3qxPNYhxTY31QRrZfMmjtuHnV3fVR_HVm1MpP9S6Ed-' +
+        'kdDYPuMSa5hbWFjmyH0vsLvSm4c9hsBNscU5Zj2TcRA1VSf3wLGdXEMSNCKg1xOoMSfZgquLH2sRi6198XsUPPQ2kEcUmck2ldkrwINewh2fBckV5B7RLvrIAL' +
+        'qF6397rG9EG-hoaqYg-cEAfVPqQFmT4xS8Gs7Pgw-LBV7TTMYJzRtEaAryZp7dkq9Ta_ZRwu2faDhmwH7A7m2wftFLPPjZTyHdE45pslIG77VsS5PYMETLqwiDNSc5GtGo1iOEEhQF_BZmtSDkX76m5LJePLErB9C0z8Bl90bAeRQQz4RG8DcSGwnh7K1EebKJVk1GGfGDt9ObJ2VYwkJVHuf8o_26_RJou69Fy51Oii2dOCGlUoFf85dZwl2ekKNNXcnT1uqhOdwI7hZCyNPLCSyDh2EC3jfHe1f4';
     //判断当前浏览器是否支持WebSocket
     if ('WebSocket' in window) {
-        websocket = new WebSocket("ws://larchat.test/ws?token="+token);
+        websocket = new WebSocket("ws://127.0.0.1:8088/ws?token="+token);
     }
     else {
         alert('当前浏览器 Not support websocket')
@@ -32,8 +36,9 @@ Welcome<br/><input id="text" type="text"/>
     };
 
     //连接成功建立的回调方法
-    websocket.onopen = function () {
+    websocket.onopen = function (event) {
         setMessageInnerHTML("WebSocket连接成功");
+        websocket.send("Hello WebSockets!");
     }
 
     //接收到消息的回调方法

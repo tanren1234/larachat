@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Proxy\TokenProxy;
 use App\Http\Requests\Api\AuthorizationRequest;
 use App\Http\Requests\Api\RegisterRequest;
+use App\Traits\WsCheckToken;
 use App\User;
 
 /**
@@ -16,7 +17,7 @@ use App\User;
  */
 class AuthorizationsController extends Controller {
 
-    use ApiReponse;
+    use ApiReponse,WsCheckToken;
     /**
      * 登录
      * @param AuthorizationRequest $request
@@ -88,6 +89,16 @@ class AuthorizationsController extends Controller {
                         ],'注册成功');
         }else{
             return $this->failed(1005);
+        }
+
+    }
+
+    public function checkToken()
+    {
+        try{
+            $this->check(request()->post('token'));
+        }catch (\Exception $exception){
+            dd($exception->getMessage());
         }
 
     }

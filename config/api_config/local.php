@@ -6,5 +6,6 @@
  * Time: 16:28
  */
 return [
-    'porxy_url'=>'http://larchat.test',
+    //'porxy_url'=>'http://larchat.test',
+    'porxy_url'=>'http://172.21.0.5:8088',
 ];
