@@ -23,9 +23,20 @@ class ConversationService
      * @param array $data
      * @return mixed
      */
-    public function start($participants, $data = [])
+    public function start($participants, $conversation_id, $data = [])
     {
-        return $this->conversation->start($participants, $data);
+        return $this->conversation->start($participants, $conversation_id, $data);
+    }
+
+    /**
+     * 创建群组会话
+     * @param $group_id
+     * @param array $data
+     * @return mixed
+     */
+    public function startGroup($group_id, $data = [])
+    {
+        return $this->conversation->startGroup($group_id, $data);
     }
 
 }

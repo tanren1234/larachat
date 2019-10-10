@@ -29,5 +29,10 @@ Route::group([
     Route::get('user', function (Request $request) {
         return $request->user();
     });
-    Route::post('message/{user}', 'MessageController@store')->name('api.message.store');;
+    Route::get('message', 'MessageController@index')->name('api.message.index');
+    Route::post('message/{user}/{conversation_id?}', 'MessageController@store')->name('api.message.store');
+    Route::post('message/group/{group}', 'MessageController@storeGroupMessage')->name('api.message.storeGroupMessage');
+
+    // 会话
+    Route::get('conversation','ConversationController@index')->name('api.conversation.index');
 });

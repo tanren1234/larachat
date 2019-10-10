@@ -61,6 +61,7 @@ class WebSocketService implements WebSocketHandlerInterface
 
     public function onClose(Server $server, $fd, $reactorId)
     {
+        $this->fdLiveCycle->delFd($fd);
         // TODO: Implement onClose() method.
     }
 }

@@ -26,7 +26,7 @@ class PushMessageTask extends Task
         // 推送消息的逻辑处理
         app('swoole')->push($this->data['fd'],json_encode($this->data['info']));
 
-        $this->result = 'the result of ' . $this->data;
+        $this->result = 'the result of ' . json_encode($this->data);
     }
     // 可选的，完成事件，任务处理完后的逻辑，运行在Worker进程中，可以投递任务
     public function finish()

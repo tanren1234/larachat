@@ -18,26 +18,52 @@ class MessageNotification extends Model
 
     protected $dates = ['deleted_at'];
 
-    public static function make(Message $message,Conversation $coversation)
+    /**
+     * * 生成消息通知
+     * @param Message $message
+     * @param Conversation $conversation
+     */
+    public static function make(Message $message, Conversation $conversation)
     {
-        $notification = [];
+        $notification= [];
 
-        if ($coversation->users) {
-            foreach ($coversation->users as $user) {
+        $users = $conversation->type == 1 ? $conversation->users : $conversation->group->users;
+
+        if ($users) {
+
+            foreach ($conversation->users as $user) {
                 $is_sender = ($message->user_id == $user->id) ? 1 : 0;
 
                 $notification[]=[
                     'user_id' => $user->id,
                     'message_id' => $message->id,
-                    'conversation_id' => $coversation->id,
+                    'conversation_id' => $conversation->id,
                     'is_seen' => $is_sender,
-                    'is_seeder' => $is_sender,
+                    'is_sender' => $is_sender,
                     'created_at' => $message->created_at
                 ];
             }
 
             self::insert($notification);
         }
+    }
 
+    /**
+     * 修改消息通知发送状态
+     * @param $user_id
+     * @param $message_id
+     * @param $conversation_id
+     */
+    public static function alertIsSendStatus($user_id, $message_id, $conversation_id)
+    {
+       $notification = MessageNotification::where([
+           'user_id' => $user_id,
+           'message_id' => $message_id,
+           'conversation_id' => $conversation_id,
+       ])->first();
+       if ($notification) {
+           $notification->is_send = 1;
+           $notification->save();
+       }
     }
 }

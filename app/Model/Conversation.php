@@ -22,6 +22,10 @@ class Conversation extends Model
     {
         return $this->belongsToMany(User::class,'im_conversation_user','conversation_id','user_id')->withTimestamps();
     }
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class,'im_conversation_groups','conversation_id','group_id')->withTimestamps();
+    }
 
     public function message()
     {
@@ -33,12 +37,21 @@ class Conversation extends Model
      * @param array $data
      * @return mixed
      */
-    public function start($participants, $data = [])
+    public function start($participants, $conversation_id = 0, $data = [])
     {
+        if ($conversation_id) {
+            return Conversation::find($conversation_id);
+        }
+
+        $eq = array_intersect($this->getUserConversations($participants[0]),$this->getUserConversations($participants[1]));
+
+        if ($eq) {
+            return Conversation::find($eq[0]);
+        }
         $conversation = $this->create(['data' => $data]);
 
         if ($participants) {
-            $conversation->addParticipants($participants);
+            $this->addParticipants($conversation, $participants);
         }
 
         return $conversation;
@@ -46,24 +59,69 @@ class Conversation extends Model
 
     /**
      * 添加用户到会话中
+     * @param $conversation
      * @param $userIds
      * @return $this
      */
-    public function addParticipants($userIds)
+    public function addParticipants($conversation, $userIds)
     {
         if (is_array($userIds)) {
             foreach ($userIds as $id){
-                $this->users()->attach($id);
+                $conversation->users()->attach($id);
             }
         } else {
-            $this->users()->attach($userIds);
+            $conversation->users()->attach($userIds);
         }
 
-        if ($this->fresh()->users()->count()>2) {
-            $this->private = false;
-            $this->save();
+        if ($conversation->fresh()->users()->count()>2) {
+            $conversation->private = false;
+            $conversation->save();
         }
 
-        return $this;
+        return $conversation;
+    }
+
+    /**
+     * 开启一个群组会话
+     * @param $group_id
+     * @param array $data
+     * @return mixed
+     */
+    public function startGroup($group_id, $data = [])
+    {
+        $cg = ConversationGroup::where('group_id', $group_id)->first();
+
+        if ($cg) return Conversation::find($cg->conversation_id);
+
+        $conversation = $this->create(['data' => $data, 'private'=> false, 'type' => 2]);
+
+        $this->addParticipantsGroups($conversation, $group_id);
+
+        return $conversation;
+    }
+
+    /**
+     * 添加群组到会话中
+     * @param $conversation
+     * @param $group_id
+     * @return mixed
+     */
+    public function addParticipantsGroups($conversation, $group_id)
+    {
+        $conversation->groups()->attach($group_id);
+
+        return $conversation;
+    }
+
+    /**
+     * 获取用户的会话集合
+     * @param $user_id
+     * @return array
+     */
+    public function getUserConversations($user_id)
+    {
+        $conversation_users = ConversationUser::where('user_id', $user_id)->get()->toArray();
+
+        return $conversation_users ? array_column($conversation_users,'conversation_id') : [];
     }
 }

@@ -58,33 +58,6 @@ class MessageService
         MessageNotification::make($message, $this->to);
 
         // push服务推送消息
-        foreach ($this->to->users as $user) {
-
-            // 过滤会话中消息发送者的推送
-            if ($message->user_id == $user->id) continue;
-
-            // 判断会话中发送的用户是否在线
-            $fd = FdLiveCycleService::getUid($user->id);
-
-            if (!empty($fd) && !empty($fd['value'])) {
-                $data = [
-                    'fd' => $fd['value'],
-                    'info' => [
-                        'type' => $this->type,
-                        'body' => $this->body
-                    ]
-                ];
-
-                $task = new PushMessageTask($data);
-
-                // 投递异步任务推送消息
-                $ret = Task::deliver($task);
-
-                if ($ret) {
-                    // 更新通知记录表发送状态状态
-                }
-            }
-
-        }
+        PushService::pushMessage($message, $this->to);
     }
 }

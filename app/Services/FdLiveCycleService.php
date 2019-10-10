@@ -46,11 +46,21 @@ class FdLiveCycleService {
         app('swoole')->wsTable->del('fd:' . $fd);// 解绑fd映射
     }
 
-    public static function getUid($uid)
+    /**
+     * 获取Fd通过uid 并判断是不是有效的连接
+     * @param $uid
+     * @return string
+     */
+    public static function getFdToUid($uid)
     {
         $uid = app('swoole')->wsTable->get('uid:' . $uid);
         if ($uid !== false) {
-            return $uid;
+            $fd = $uid['value'];
+            // 连接是否为有效的WebSocket客户端连接
+            if (app('swoole')->isEstablished($fd)) {
+                return $fd;
+            }
+            return '';
         }
         return '';
     }
