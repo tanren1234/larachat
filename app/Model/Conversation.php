@@ -27,9 +27,13 @@ class Conversation extends Model
         return $this->belongsToMany(Group::class,'im_conversation_groups','conversation_id','group_id')->withTimestamps();
     }
 
-    public function message()
+    public function messages()
     {
-        return $this->hasMany(Message::class,'conversation_id');
+        return $this->hasMany(Message::class,'conversation_id')->groupBy('id');
+    }
+    public function lastMessage()
+    {
+        return $this->hasOne(Message::class,'conversation_id')->orderBy('id','desc');
     }
     /**
      * 开启一个会话
@@ -40,13 +44,14 @@ class Conversation extends Model
     public function start($participants, $conversation_id = 0, $data = [])
     {
         if ($conversation_id) {
-            return Conversation::find($conversation_id);
+            return Conversation::with('users')->find($conversation_id);
         }
 
         $eq = array_intersect($this->getUserConversations($participants[0]),$this->getUserConversations($participants[1]));
 
+        // 是否在一个会话里
         if ($eq) {
-            return Conversation::find($eq[0]);
+            return Conversation::with('users')->find($eq[0]);
         }
         $conversation = $this->create(['data' => $data]);
 
@@ -54,7 +59,7 @@ class Conversation extends Model
             $this->addParticipants($conversation, $participants);
         }
 
-        return $conversation;
+        return Conversation::with('users')->find($conversation->id);
     }
 
     /**
@@ -91,13 +96,13 @@ class Conversation extends Model
     {
         $cg = ConversationGroup::where('group_id', $group_id)->first();
 
-        if ($cg) return Conversation::find($cg->conversation_id);
+        if ($cg) return Conversation::with('groups.users')->where(['id'=>$cg->conversation_id,'type'=>2])->first();
 
         $conversation = $this->create(['data' => $data, 'private'=> false, 'type' => 2]);
 
         $this->addParticipantsGroups($conversation, $group_id);
 
-        return $conversation;
+        return Conversation::with('groups.users')->find($conversation->id);
     }
 
     /**

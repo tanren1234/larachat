@@ -56,7 +56,7 @@ return [
     'register_providers'       => [],
     'cleaners'                 => [
         //Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class, // If you use the session or authentication in your project, please uncomment this line
-        //Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,    // If you use the authentication or passport in your project, please uncomment this line
+        Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,    // If you use the authentication or passport in your project, please uncomment this line
         //Hhxsv5\LaravelS\Illuminate\Cleaners\JWTCleaner::class,     // If you use the package "tymon/jwt-auth" in your project, please uncomment this line
         // ...
     ],
@@ -79,7 +79,7 @@ return [
         'open_tcp_nodelay'   => true,
         'pid_file'           => storage_path('laravels.pid'),
         'log_file'           => storage_path(sprintf('logs/swoole-%s.log', date('Y-m-d'))),
-        'log_level'          => 4,
+        'log_level'          => 0,
         'document_root'      => base_path('public'),
         'buffer_output_size' => 2 * 1024 * 1024,
         'socket_buffer_size' => 128 * 1024 * 1024,
@@ -89,7 +89,8 @@ return [
         'enable_reuse_port'  => true,
         'enable_coroutine'   => false,
         'http_compression'   => false,
-
+        'heartbeat_idle_time'      => 600,
+        'heartbeat_check_interval' => 60,
         // Slow log
         // 'request_slowlog_timeout' => 2,
         // 'request_slowlog_file'    => storage_path(sprintf('logs/slow-%s.log', date('Y-m'))),

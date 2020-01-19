@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Model\Conversation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ConversationCollection;
+use App\Http\Resources\ConversationsCollection;
+use App\Http\Resources\Conversation as ConversationResource;
+
 class ConversationController extends Controller
 {
     /**
@@ -21,9 +23,7 @@ class ConversationController extends Controller
 
         $uid = $request->user()->id;
 
-        $query = $query->with(['message'=> function($query){
-            $query->orderBy('updated_at','desc');
-        }])->whereHas('users', function ($query) use($uid) {
+        $query = $query->with(['lastMessage.sender','users','groups.users'])->whereHas('users', function ($query) use($uid) {
             // 私聊会话关联存在
             $query->where('user_id', $uid);
         })->orWhereHas('groups',function ($query) use($uid) {
@@ -33,9 +33,9 @@ class ConversationController extends Controller
             });
         });
 
-        $conversations = $query->paginate(5);
+        $conversations = $query->where('private',1)->orderBy('updated_at','desc')->paginate(2);
 
-        return $this->success(new ConversationCollection($conversations));
+        return $this->success(new ConversationsCollection($conversations));
     }
 
     /**
@@ -68,6 +68,9 @@ class ConversationController extends Controller
     public function show($id)
     {
         //
+        $conversation = Conversation::with('messages.sender')->where('id',$id)->first();
+
+        return $this->success(new ConversationResource($conversation));
     }
 
     /**

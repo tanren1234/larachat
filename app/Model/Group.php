@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
@@ -13,6 +14,6 @@ class Group extends Model
 
     public function users()
     {
-        return $this->hasMany(GroupUser::class, 'group_id');
+        return $this->belongsToMany(User::class,GroupUser::class, 'group_id','user_id');
     }
 }

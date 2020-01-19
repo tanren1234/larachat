@@ -33,20 +33,24 @@ class WebSocketService implements WebSocketHandlerInterface
 
     public function onOpen(Server $server, Request $request)
     {
-        Log::info('New WebSocket connection', request()->all());
+        Log::info('New WebSocket connection', [$request->fd,request()->get('token')]);
+
         // TODO: Implement onOpen() method.
         // 在触发onOpen事件之前Laravel的生命周期已经完结，所以Laravel的Request是可读的，Session是可读写的
         // \Log::info('New WebSocket connection', [$request->fd, request()->all(), session()->getId(), session('xxx'), session(['yyy' => time()])]);
         // 验证token
         try{
             $user_id = $this->check(request()->get('token'));
+
             // 绑定userId和Fd
             $this->fdLiveCycle->setFd($user_id, $request->fd);
-
+            Log::info('fd => user_id', [$request->fd . '=>' .$user_id]);
             // 记录在线状态
 
+            $server->push($request->fd, "Welcome to im #{$request->fd}");
             // 广播至好友 使用异步任务
         }catch (\Exception $exception){
+            Log::info('fd => user_id', [$exception->getMessage()]);
             $this->pushService->pushFd($server, $request->fd, $exception->getMessage());
             $server->close($request->fd);
         }

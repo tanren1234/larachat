@@ -27,11 +27,11 @@ class MessageNotification extends Model
     {
         $notification= [];
 
-        $users = $conversation->type == 1 ? $conversation->users : $conversation->group->users;
+        $users = $conversation->type == 1 ? $conversation->users : $conversation->groups[0]->users;
 
         if ($users) {
 
-            foreach ($conversation->users as $user) {
+            foreach ($users as $user) {
                 $is_sender = ($message->user_id == $user->id) ? 1 : 0;
 
                 $notification[]=[

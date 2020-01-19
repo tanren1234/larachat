@@ -21,18 +21,20 @@ Route::group([
     Route::post('login','AuthorizationsController@login');
     //注册
     Route::post('register','AuthorizationsController@register');
+
 });
 Route::group([
     'namespace'=>'Api',
     'middleware'=>'auth:api'
 ],function (){
-    Route::get('user', function (Request $request) {
-        return $request->user();
-    });
-    Route::get('message', 'MessageController@index')->name('api.message.index');
+    Route::get('user/{id?}', 'UserController@show')->name('api.user.show');
+    // 消息
+    Route::get('message/{conversation_id}', 'MessageController@index')->name('api.message.index');
     Route::post('message/{user}/{conversation_id?}', 'MessageController@store')->name('api.message.store');
-    Route::post('message/group/{group}', 'MessageController@storeGroupMessage')->name('api.message.storeGroupMessage');
+    Route::post('message_group/{group_id}', 'MessageController@storeGroupMessage')->name('api.message.storeGroupMessage');
 
     // 会话
-    Route::get('conversation','ConversationController@index')->name('api.conversation.index');
+    Route::resource('conversation','ConversationController');
+    //上传文件
+    Route::post('upload', 'UserController@upload')->name('api.upload');
 });

@@ -53,7 +53,6 @@ class ExceptionReport{
        // if (! ($this->request->expectsJson() || $this->request->ajax())){
        //     return false;
       //  }
-
         foreach (array_keys($this->doReport) as $report){
 
             if ($this->exception instanceof $report){
@@ -83,9 +82,9 @@ class ExceptionReport{
 
         $message = $this->doReport[$this->report];
         if($this->exception instanceof ValidationException){
-            return $this->failed(array_values($this->exception->errors())[0][0],$message[1]);
+            return $this->failed($message[1],array_values($this->exception->errors())[0][0]);
         }
-        return $this->failed($message[0],$message[1]);
+        return $this->failed($message[1],$message[0]);
 
     }
 }

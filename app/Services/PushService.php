@@ -7,6 +7,7 @@ use App\Model\MessageNotification;
 use App\Task\PushMessageTask;
 use App\Traits\WsReponseDataFormat;
 use Hhxsv5\LaravelS\Swoole\Task\Task;
+use Illuminate\Support\Facades\Log;
 use Swoole\WebSocket\Server;
 /**
  * Created by PhpStorm.
@@ -33,10 +34,13 @@ class PushService
         $service->push($fd, $data);
     }
 
-
+    /**
+     * @param Message $message
+     * @param Conversation $conversation
+     */
     public static function pushMessage(Message $message, Conversation $conversation)
     {
-        $users = $conversation->type == 1 ? $conversation->users : $conversation->group->users;
+        $users = $conversation->type == 1 ? $conversation->users : $conversation->groups->users;
         // push服务推送消息
         foreach ($users as $user) {
 
@@ -49,10 +53,7 @@ class PushService
             if (!empty($fd)) {
                 $data = [
                     'fd' =>$fd,
-                    'info' => [
-                        'type' => $message->type,
-                        'body' => $message->body
-                    ]
+                    'message' => $message
                 ];
 
                 $task = new PushMessageTask($data);
