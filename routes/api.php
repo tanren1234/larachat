@@ -27,7 +27,7 @@ Route::group([
     'namespace'=>'Api',
     'middleware'=>'auth:api'
 ],function (){
-    Route::get('user/{id?}', 'UserController@show')->name('api.user.show');
+    Route::get('user', 'UserController@show')->name('api.user.show');
     // 消息
     Route::get('message/{conversation_id}', 'MessageController@index')->name('api.message.index');
     Route::post('message/{user}/{conversation_id?}', 'MessageController@store')->name('api.message.store');

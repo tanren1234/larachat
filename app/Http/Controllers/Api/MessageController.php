@@ -52,7 +52,8 @@ class MessageController extends Controller
     {
         $conversation = Chat::createConversationGroup($group_id);
 
-        $messages = Chat::message('Hello'.now())
+        $messages = Chat::message($request->post('content','Hello'.now()))
+            ->type($request->post('type','text'))
             ->from($request->user()->id)
             ->to($conversation)
             ->send();

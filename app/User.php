@@ -44,4 +44,16 @@ class User extends Authenticatable
 
         $this->attributes['avatar'] = $path;
     }
+
+    public function getAvatarAttribute($path)
+    {
+        // 如果不是 `http` 子串开头，那就是从后台上传的，需要补全 URL
+        if ($path && ! starts_with($path, 'http')) {
+
+            // 拼接完整的 URL
+            $path = config('app.url') . $path;
+        }
+
+        return $path ?: config('app.url') . '/avater.png';
+    }
 }
