@@ -16,3 +16,6 @@
 
 ### 修改config/api_config 下porxy_url为nginx容器的ip 
 > docker inspect {容器id} | grep IPAddress
+- 也可使用当前项目的域名或ip
+
+
