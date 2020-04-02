@@ -4,7 +4,7 @@
 
 - cd larachat
 - composer install 
-
+- 数据迁移 php artisan migrate
 ### 启动服务
 - php bin/laravels start
 - 使用Nginx代理 [docker_php环境](https://github.com/tanren1234/docker_php_env)
