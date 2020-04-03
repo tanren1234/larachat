@@ -15,17 +15,11 @@ class Cors
      */
     public function handle($request, Closure $next)
     {
-        // 设置允许访问的域地址
-        $domains = ['http://39.106.58.190:8089'];
-        // 判断请求头中是否包含ORIGIN字段
-        if(isset($request->server()['HTTP_ORIGIN'])){
-            $origin = $request->server()['HTTP_ORIGIN'];
-            if (in_array($origin, $domains)) {
-                //设置响应头信息
-                header('Access-Control-Allow-Origin: '.$origin);
-                header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
-            }
-        }
-        return $next($request);
+        $response = $next($request);
+        $response->header('Access-Control-Allow-Origin', '*');
+        $response->header('Access-Control-Allow-Headers', 'x-requested-with , Origin, Content-Type, Cookie, Accept, multipart/form-data, application/json ,application/x-www-form-urlencoded');
+        $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS ');
+        $response->header('Access-Control-Allow-Credentials', 'true');
+        return $response;
     }
 }
