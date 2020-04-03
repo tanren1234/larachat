@@ -16,6 +16,7 @@ Route::post('checkToken','Api\AuthorizationsController@checkToken');
 
 Route::group([
     'namespace'=>'Api',
+    'middleware'=>'acors'
 ],function (){
     //登录
     Route::post('login','AuthorizationsController@login');
@@ -25,7 +26,7 @@ Route::group([
 });
 Route::group([
     'namespace'=>'Api',
-    'middleware'=>'auth:api'
+    'middleware'=>['auth:api','cors']
 ],function (){
     Route::get('user', 'UserController@show')->name('api.user.show');
     // 消息
