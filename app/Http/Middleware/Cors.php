@@ -17,9 +17,18 @@ class Cors
     {
         $response = $next($request);
         $response->header('Access-Control-Allow-Origin', '*');
-        $response->header('Access-Control-Allow-Headers', 'x-requested-with , Origin, Content-Type, Cookie, Accept, multipart/form-data, application/json ,application/x-www-form-urlencoded');
+        $response->header('Access-Control-Allow-Headers', 'Authorization ,x-requested-with , Origin, Content-Type, Cookie, Accept, multipart/form-data, application/json ,application/x-www-form-urlencoded');
         $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS ');
-        $response->header('Access-Control-Allow-Credentials', 'true');
+        $response->header('Access-Control-Allow-Credentials', 'false');
+
+        if($request->method() == 'OPTIONS'){
+
+            return response('allow', 200)
+                ->header('Access-Control-Allow-Headers', 'Authorization ,x-requested-with , Origin, Content-Type, Cookie, Accept, multipart/form-data, application/json ,application/x-www-form-urlencoded')
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Credentials', 'false')
+                ->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS');
+        }
         return $response;
     }
 }
