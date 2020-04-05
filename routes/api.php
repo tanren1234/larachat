@@ -15,8 +15,7 @@ use Illuminate\Http\Request;
 Route::post('checkToken','Api\AuthorizationsController@checkToken');
 
 Route::group([
-    'namespace'=>'Api',
-    'middleware'=>'cors'
+    'namespace'=>'Api'
 ],function (){
     //登录
     Route::post('login','AuthorizationsController@login');
@@ -26,7 +25,7 @@ Route::group([
 });
 Route::group([
     'namespace'=>'Api',
-    'middleware'=>['auth:api','cors']
+    'middleware'=>['auth:api']
 ],function (){
     Route::get('user', 'UserController@show')->name('api.user.show');
     // 消息
