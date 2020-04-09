@@ -23,10 +23,7 @@ Route::group([
     Route::post('register','AuthorizationsController@register');
 
 });
-Route::group([
-    'namespace'=>'Api',
-    'middleware'=>['auth:api']
-],function (){
+Route::group(['namespace'=>'Api','middleware'=>['auth:api']],function (){
     Route::get('user', 'UserController@show')->name('api.user.show');
     // 消息
     Route::get('message/{conversation_id}', 'MessageController@index')->name('api.message.index');
