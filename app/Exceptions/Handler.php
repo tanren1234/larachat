@@ -51,7 +51,10 @@ class Handler extends ExceptionHandler
             $reporter = ExceptionReport::make($exception);
             if($reporter->shouldReturn()){
                 return $reporter->report();
+            }else{
+                return $reporter->baseReport($exception);
             }
+
         }
         return parent::render($request, $exception);
     }

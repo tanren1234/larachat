@@ -87,4 +87,8 @@ class ExceptionReport{
         return $this->failed($message[1],$message[0]);
 
     }
+    public function baseReport(Exception $e)
+    {
+        return $this->failed($e->getCode(),$e->getMessage());
+    }
 }

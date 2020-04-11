@@ -3,6 +3,7 @@
 namespace App\Handlers;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Image;
+use Symfony\Component\HttpFoundation\Response;
 
 class UploadHandler
 {
@@ -13,18 +14,25 @@ class UploadHandler
 
     public function save($file, $folder = 'image', $type, $max_width = false)
     {
-        $this->suffix = $type;
-        switch ($type) {
-            case 'image':
-            case 'file':
+        try{
+            $this->suffix = $type;
+            switch ($type) {
+                case 'image':
+                case 'file':
                     return $this->saveImage($file, $folder, $type=='image' ? $max_width : false);
-            case 'video':
-            case 'voice':
+                case 'video':
+                case 'voice':
                     return $this->saveImage($file, $folder, $type=='image' ? $max_width : false);
-                    //return $this->saveVideo($file);
-            default:
-                break;
+                //return $this->saveVideo($file);
+                default:
+                    break;
+            }
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }catch (\Error $error){
+            throw new \Exception($error->getMessage(),Response::HTTP_BAD_REQUEST);
         }
+
     }
 
     private function saveImage($file, $folder, $max_width = false)

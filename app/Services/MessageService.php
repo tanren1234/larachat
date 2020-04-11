@@ -81,8 +81,9 @@ class MessageService
     }
 
     /**
-     *  上传文件
+     * 上传文件
      * @param UploadHandler $uploader
+     * @throws \Exception
      */
     protected function uploadContent(UploadHandler $uploader)
     {
