@@ -133,7 +133,7 @@ class MessageService
         MessageNotification::make($message, $this->to);
 
         // push服务推送消息
-        //PushService::pushMessage($message, $this->to);
+        PushService::pushMessage($message, $this->to);
 
         return $message;
     }
